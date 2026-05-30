@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#06b6d4" />
+<meta name="description" content="GridMaster Pro — All-in-One Electrical & Renewable Energy Toolkit. Solar, Wind, Hybrid System Designer, Smart Grid Dashboard, 20+ Electrical Calculators, AR Rooftop, PDF Reports & AI Assistant." />
+<title>GridMaster Pro — Electrical & Renewable Energy Toolkit</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="styles.css" />
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onerror="window.__jspdfFailed=true"></script>
+</head>
+<body>
+
+  <!-- ============== SPLASH ============== -->
+  <div id="splash" class="splash">
+    <div class="splash-bg"></div>
+    <div class="splash-inner">
+      <svg viewBox="0 0 120 120" class="logo-anim" aria-hidden="true">
+        <defs>
+          <linearGradient id="lg" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#22d3ee"/>
+            <stop offset="60%" stop-color="#06b6d4"/>
+            <stop offset="100%" stop-color="#16a34a"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="url(#lg)" stroke-width="4" filter="url(#glow)"/>
+        <path d="M60 18 L40 64 H58 L52 102 L82 54 H66 L72 18 Z" fill="url(#lg)" filter="url(#glow)"/>
+      </svg>
+      <h1>GridMaster Pro</h1>
+      <p>Electrical • Solar • Wind • Smart Grid</p>
+      <div class="loader-bar"><div></div></div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <div id="app" class="app hidden">
+
+    <header class="topbar">
+      <div class="brand">
+        <svg viewBox="0 0 120 120" class="brand-logo"><use href="#brandlogo"/></svg>
+        <div>
+          <h1>GridMaster <span class="pro-badge">PRO</span></h1>
+          <small data-i18n="subtitle">Engineering Toolkit</small>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="langBtn" class="icon-btn" title="Language">🌐 <span id="langCurrent">English</span></button>
+        <button id="themeBtn" class="icon-btn" title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <main id="views">
+
+      <!-- =============== HOME / DASHBOARD =============== -->
+      <section class="view" data-view="home">
+        <div class="hero glass">
+          <div class="hero-content">
+            <h2 data-i18n="welcome">Welcome ⚡</h2>
+            <p data-i18n="welcome_desc">Your all-in-one toolkit for electrical engineering & renewable energy.</p>
+          </div>
+          <div class="hero-stats">
+            <div><b id="statCalcs">25+</b><small data-i18n="calculators_count">Calculators</small></div>
+            <div><b>7</b><small data-i18n="modules">Modules</small></div>
+            <div><b>AI</b><small data-i18n="ai_assistant">Assistant</small></div>
+          </div>
+        </div>
+
+        <h3 class="section-title" data-i18n="live_dashboard">📊 Live Smart Grid Dashboard <span class="live-dot"></span></h3>
+        <div class="dashboard">
+          <div class="metric glass"><small data-i18n="voltage">Voltage</small><h3 id="mVolt">230 V</h3><div class="spark"></div></div>
+          <div class="metric glass"><small data-i18n="current">Current</small><h3 id="mCurr">12.4 A</h3><div class="spark"></div></div>
+          <div class="metric glass"><small data-i18n="frequency">Frequency</small><h3 id="mFreq">50.0 Hz</h3><div class="spark"></div></div>
+          <div class="metric glass"><small data-i18n="pf">Power Factor</small><h3 id="mPF">0.92</h3><div class="spark"></div></div>
+          <div class="metric glass big-metric">
+            <small data-i18n="renewable">Renewable Contribution</small>
+            <h3 id="mRen">68%</h3>
+            <div class="bar"><div id="renBar"></div></div>
+          </div>
+          <div class="metric glass big-metric">
+            <small data-i18n="load_trend">Load Trend</small>
+            <canvas id="loadChart" width="320" height="80"></canvas>
+          </div>
+        </div>
+
+        <h3 class="section-title" data-i18n="live_flow">⚡ Live Energy Flow</h3>
+        <div class="glass energy-flow">
+          <div class="flow-source">☀️<small>Solar</small></div>
+          <div class="flow-line"><div class="dot"></div></div>
+          <div class="flow-source">🌬️<small>Wind</small></div>
+          <div class="flow-line"><div class="dot delay1"></div></div>
+          <div class="flow-bus">⚡<small>Bus</small></div>
+          <div class="flow-line"><div class="dot delay2"></div></div>
+          <div class="flow-source">🔋<small>Battery</small></div>
+          <div class="flow-line"><div class="dot delay3"></div></div>
+          <div class="flow-load">🏠<small>Load</small></div>
+        </div>
+
+        <h3 class="section-title" data-i18n="modules_title">🚀 Modules</h3>
+        <div class="grid">
+          <button class="card glass" data-go="solar"><div class="card-icon">☀️</div><h3 data-i18n="solar_designer">Solar Designer</h3><p data-i18n="solar_designer_d">Panel sizing, inverter, cable, ROI</p></button>
+          <button class="card glass" data-go="wind"><div class="card-icon">🌬️</div><h3 data-i18n="wind_power">Wind Power</h3><p data-i18n="wind_power_d">Turbine output, Cp, RPM, power curve</p></button>
+          <button class="card glass" data-go="hybrid"><div class="card-icon">⚡</div><h3 data-i18n="hybrid_designer">Hybrid Designer</h3><p data-i18n="hybrid_designer_d">Solar + Wind + Battery balance</p></button>
+          <button class="card glass" data-go="ar"><div class="card-icon">📐</div><h3 data-i18n="ar_estimator">AR Rooftop</h3><p data-i18n="ar_estimator_d">Estimate solar from rooftop dimensions</p></button>
+          <button class="card glass" data-go="calc"><div class="card-icon">🧮</div><h3 data-i18n="ee_calc">EE Calculators</h3><p data-i18n="ee_calc_d">20+ tools for electricians & engineers</p></button>
+          <button class="card glass" data-go="bill"><div class="card-icon">💰</div><h3 data-i18n="eb_bill">EB Bill Estimator</h3><p data-i18n="eb_bill_d">India slab-based bill calculator</p></button>
+          <button class="card glass" data-go="ai"><div class="card-icon">🤖</div><h3 data-i18n="ai_card">AI Assistant</h3><p data-i18n="ai_card_d">Ask anything about electrical / solar</p></button>
+          <button class="card glass" data-go="report"><div class="card-icon">📄</div><h3 data-i18n="reports">PDF Reports</h3><p data-i18n="reports_d">Generate project / site / quote reports</p></button>
+          <button class="card glass" data-go="learn"><div class="card-icon">📚</div><h3 data-i18n="learn">Learn</h3><p data-i18n="learn_d">Smart Grid notes & formulas</p></button>
+          <button class="card glass" data-go="present"><div class="card-icon">🎞️</div><h3 data-i18n="present">Presentation</h3><p data-i18n="present_d">13 slides — perfect for project viva</p></button>
+          <button class="card glass" data-go="quiz"><div class="card-icon">🎯</div><h3 data-i18n="quiz">Quiz</h3><p data-i18n="quiz_d">Test your EE knowledge</p></button>
+          <button class="card glass" data-go="about"><div class="card-icon">ℹ️</div><h3 data-i18n="about">About</h3><p data-i18n="about_d">Install & Play Store guide</p></button>
+        </div>
+      </section>
+
+      <!-- =============== SOLAR DESIGNER =============== -->
+      <section class="view hidden" data-view="solar">
+        <h2>☀️ <span data-i18n="solar_designer">Solar Designer</span></h2>
+        <div class="calc-panel glass">
+          <h3>Complete System Sizing</h3>
+          <p class="muted">Enter your load and we'll size panels, batteries, inverter & cables.</p>
+          <div class="row">
+            <label><span data-i18n="daily_load_kwh">Daily Load (kWh)</span> <input type="number" id="sd_load" value="5" step="0.1"></label>
+            <label><span data-i18n="sun_hours">Sunlight Hours/day</span> <input type="number" id="sd_sun" value="5" step="0.5"></label>
+          </div>
+          <div class="row">
+            <label><span data-i18n="backup_hours">Backup Hours</span> <input type="number" id="sd_backup" value="6"></label>
+            <label><span data-i18n="sys_voltage">System Voltage (V)</span> <input type="number" id="sd_sysV" value="48"></label>
+          </div>
+          <div class="row">
+            <label><span data-i18n="panel_wattage">Panel Wattage (W)</span> <input type="number" id="sd_panelW" value="400"></label>
+            <label><span data-i18n="battery_voltage">Battery Voltage (V)</span> <input type="number" id="sd_battV" value="12"></label>
+          </div>
+          <div class="row">
+            <label><span data-i18n="cost_per_w">Cost/Watt (₹)</span> <input type="number" id="sd_cost" value="55"></label>
+            <label><span data-i18n="tariff">Tariff (₹/kWh)</span> <input type="number" id="sd_tar" value="8"></label>
+          </div>
+          <button class="primary" onclick="calcSolarDesign()" data-i18n="design_my_system">⚡ Design My System</button>
+          <div class="result" id="r_sd"></div>
+        </div>
+
+        <div class="calc-panel glass" style="margin-top:14px">
+          <h3>Quick Solar PV Calculator</h3>
+          <div class="row">
+            <label>Area (m²) <input type="number" id="s_area" value="1.6" step="0.01"></label>
+            <label>Irradiance (W/m²) <input type="number" id="s_irr" value="1000"></label>
+          </div>
+          <div class="row">
+            <label>Efficiency (%) <input type="number" id="s_eff" value="18"></label>
+            <label>Sun Hours/day <input type="number" id="s_sun" value="5"></label>
+          </div>
+          <button class="primary" onclick="calcSolar()" data-i18n="calculate">Calculate</button>
+          <div class="result" id="r_solar"></div>
+        </div>
+      </section>
+
+      <!-- =============== WIND =============== -->
+      <section class="view hidden" data-view="wind">
+        <h2>🌬️ <span data-i18n="wind_power">Wind Power</span></h2>
+        <div class="turbine-anim glass">
+          <div class="turbine">
+            <div class="tower"></div>
+            <div class="hub">
+              <div class="blade b1"></div>
+              <div class="blade b2"></div>
+              <div class="blade b3"></div>
+            </div>
+          </div>
+          <p class="muted center">Live turbine animation</p>
+        </div>
+        <div class="calc-panel glass">
+          <h3>Wind Turbine — P = ½ ρ A v³ Cp</h3>
+          <div class="row">
+            <label>Air Density ρ (kg/m³) <input type="number" id="w_rho" value="1.225" step="0.001"></label>
+            <label>Blade Radius (m) <input type="number" id="w_r" value="2"></label>
+          </div>
+          <div class="row">
+            <label>Wind Speed v (m/s) <input type="number" id="w_v" value="10"></label>
+            <label>Power Coefficient Cp <input type="number" id="w_cp" value="0.4" step="0.01"></label>
+          </div>
+          <div class="row">
+            <label>Generator Efficiency (%) <input type="number" id="w_eg" value="90"></label>
+            <label>Tip Speed Ratio λ <input type="number" id="w_tsr" value="7"></label>
+          </div>
+          <button class="primary" onclick="calcWind()" data-i18n="calculate">Calculate</button>
+          <div class="result" id="r_wind"></div>
+          <h4>Power vs Wind Speed Curve</h4>
+          <canvas id="windCurve" width="400" height="220" class="chart-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- =============== HYBRID DESIGNER =============== -->
+      <section class="view hidden" data-view="hybrid">
+        <h2>⚡ <span data-i18n="hybrid_designer">Hybrid Designer</span></h2>
+        <div class="calc-panel glass">
+          <h3>Solar + Wind + Battery Energy Balance</h3>
+          <div class="row">
+            <label>Solar Capacity (kW) <input type="number" id="hd_solar" value="3" step="0.1"></label>
+            <label>Wind Capacity (kW) <input type="number" id="hd_wind" value="2" step="0.1"></label>
+          </div>
+          <div class="row">
+            <label>Avg Sun Hours <input type="number" id="hd_sun" value="5"></label>
+            <label>Avg Wind Hours <input type="number" id="hd_wh" value="6"></label>
+          </div>
+          <div class="row">
+            <label>Daily Load (kWh) <input type="number" id="hd_load" value="20"></label>
+            <label>Battery Size (kWh) <input type="number" id="hd_batt" value="10"></label>
+          </div>
+          <button class="primary" onclick="calcHybridDesign()">Run Simulation</button>
+          <div class="result" id="r_hd"></div>
+          <h4>Energy Balance Chart</h4>
+          <canvas id="hybridChart" width="400" height="240" class="chart-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- =============== AR ROOFTOP ESTIMATOR =============== -->
+      <section class="view hidden" data-view="ar">
+        <h2>📐 AR Rooftop Solar Estimator</h2>
+        <div class="calc-panel glass">
+          <h3>Measure Your Roof — Get Solar Estimate</h3>
+          <p class="muted">📸 Use your phone camera to capture the rooftop, then enter the dimensions. App calculates panels, kW, generation and ROI.</p>
+
+          <div class="ar-preview" id="arPreview">
+            <video id="arVideo" autoplay muted playsinline></video>
+            <canvas id="arOverlay"></canvas>
+            <div class="ar-placeholder" id="arPlaceholder">
+              <div style="font-size:3rem">📷</div>
+              <p>Tap "Open Camera" to see your roof with AR grid overlay</p>
+            </div>
+          </div>
+          <div class="row">
+            <button class="primary" onclick="startAR()">📸 Open Camera</button>
+            <button class="secondary" onclick="stopAR()" style="margin-top:16px">✕ Stop Camera</button>
+          </div>
+
+          <h4 style="margin-top:18px">Rooftop Dimensions</h4>
+          <div class="row">
+            <label>Length (m) <input type="number" id="ar_len" value="10" step="0.1"></label>
+            <label>Width (m) <input type="number" id="ar_wid" value="8" step="0.1"></label>
+          </div>
+          <div class="row">
+            <label>Tilt Angle (°) <input type="number" id="ar_tilt" value="20"></label>
+            <label>Shade-free % <input type="number" id="ar_shade" value="85"></label>
+          </div>
+          <div class="row">
+            <label>Panel Size (m²) <input type="number" id="ar_panel" value="1.95" step="0.01"></label>
+            <label>Panel Watts <input type="number" id="ar_pw" value="400"></label>
+          </div>
+          <button class="primary" onclick="calcAR()">📐 Calculate Estimate</button>
+          <div class="result" id="r_ar"></div>
+        </div>
+      </section>
+
+      <!-- =============== EE CALCULATORS =============== -->
+      <section class="view hidden" data-view="calc">
+        <h2>🧮 <span data-i18n="ee_calc">EE Calculators</span></h2>
+        <input type="text" id="calcSearch" class="search" placeholder="🔍 Search calculator…" oninput="filterCalcs()" />
+        <div class="calc-grid" id="calcGrid"></div>
+
+        <div class="modal hidden" id="calcModal">
+          <div class="modal-card glass">
+            <div class="modal-head">
+              <h3 id="modalTitle">Calculator</h3>
+              <button class="icon-btn" onclick="closeCalcModal()">✕</button>
+            </div>
+            <div id="modalBody"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== EB BILL =============== -->
+      <section class="view hidden" data-view="bill">
+        <h2>💰 <span data-i18n="eb_bill">EB Bill Estimator</span></h2>
+        <div class="calc-panel glass">
+          <h3>Domestic Slab-based Bill</h3>
+          <label>State Tariff Preset
+            <select id="eb_state">
+              <option value="generic">Generic (Average India)</option>
+              <option value="ts">Telangana (TSSPDCL)</option>
+              <option value="ap">Andhra Pradesh (APSPDCL)</option>
+              <option value="ka">Karnataka (BESCOM)</option>
+              <option value="tn">Tamil Nadu (TNEB)</option>
+              <option value="mh">Maharashtra (MSEDCL)</option>
+              <option value="dl">Delhi (BSES/TPDDL)</option>
+              <option value="up">Uttar Pradesh (UPPCL)</option>
+              <option value="gj">Gujarat (DGVCL)</option>
+              <option value="wb">West Bengal (WBSEDCL)</option>
+              <option value="rj">Rajasthan (JVVNL)</option>
+              <option value="mp">Madhya Pradesh (MPPKVVCL)</option>
+              <option value="kl">Kerala (KSEB)</option>
+              <option value="pb">Punjab (PSPCL)</option>
+              <option value="hr">Haryana (DHBVN)</option>
+              <option value="br">Bihar (NBPDCL)</option>
+              <option value="or">Odisha (TPCODL)</option>
+              <option value="as">Assam (APDCL)</option>
+              <option value="jh">Jharkhand (JBVNL)</option>
+              <option value="ch">Chhattisgarh (CSPDCL)</option>
+              <option value="uk">Uttarakhand (UPCL)</option>
+              <option value="hp">Himachal Pradesh (HPSEBL)</option>
+              <option value="jk">J&K (JKPDD)</option>
+              <option value="gomu">Goa</option>
+            </select>
+          </label>
+          <label>Monthly Units (kWh) <input type="number" id="eb_units" value="250"></label>
+          <label>Fixed Charges (₹) <input type="number" id="eb_fixed" value="50"></label>
+          <button class="primary" onclick="calcEB()">Calculate Bill</button>
+          <div class="result" id="r_eb"></div>
+        </div>
+
+        <div class="calc-panel glass" style="margin-top:14px">
+          <h3>🏠 Appliance Load Estimator</h3>
+          <p class="muted">Add appliances to estimate your monthly consumption.</p>
+          <div id="applianceList"></div>
+          <button class="secondary" onclick="addAppliance()">+ Add Appliance</button>
+          <div class="result" id="r_appl"></div>
+        </div>
+      </section>
+
+      <!-- =============== AI ASSISTANT =============== -->
+      <section class="view hidden" data-view="ai">
+        <h2>🤖 <span data-i18n="ai_card">AI Assistant</span></h2>
+        <div class="glass ai-info">
+          <p>💡 Ask anything about <b>electrical engineering, solar, wind, smart grid, or troubleshooting</b>. Offline knowledge base built-in. Add your own API key below for full AI power.</p>
+        </div>
+
+        <details class="glass ai-settings" id="aiSettings">
+          <summary>⚙️ AI Settings — Connect OpenAI / Gemini (optional)</summary>
+          <div class="settings-body">
+            <label>AI Provider
+              <select id="aiProvider">
+                <option value="offline">Offline (built-in knowledge base)</option>
+                <option value="openai">OpenAI (GPT-4o-mini)</option>
+                <option value="gemini">Google Gemini (1.5 Flash)</option>
+              </select>
+            </label>
+            <label>API Key
+              <input type="password" id="aiKey" placeholder="sk-... or AIza..." />
+            </label>
+            <small class="muted">🔒 Your key is stored only on this device. Never sent to GridMaster. <a href="privacy.html">Privacy policy</a>.</small>
+            <button class="primary" onclick="saveAISettings()">💾 Save Settings</button>
+            <div id="aiSettingsMsg" class="muted" style="margin-top:8px"></div>
+          </div>
+        </details>
+
+        <div class="chat glass" id="chatBox"></div>
+        <div class="chat-input">
+          <input type="text" id="chatMsg" placeholder="e.g. How many panels for a 5HP motor?" onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="primary" onclick="sendChat()" data-i18n="send">Send</button>
+        </div>
+        <div class="chip-row">
+          <button class="chip" onclick="quickAsk('Why is my inverter tripping?')">Why inverter tripping?</button>
+          <button class="chip" onclick="quickAsk('How many panels for 5HP motor?')">Panels for 5HP motor</button>
+          <button class="chip" onclick="quickAsk('Why voltage drop happens?')">Voltage drop causes</button>
+          <button class="chip" onclick="quickAsk('What is MPPT?')">What is MPPT?</button>
+          <button class="chip" onclick="quickAsk('Cable size for 10kW load')">Cable for 10kW</button>
+        </div>
+      </section>
+
+      <!-- =============== REPORTS =============== -->
+      <section class="view hidden" data-view="report">
+        <h2>📄 <span data-i18n="reports">PDF Reports</span></h2>
+        <div class="calc-panel glass">
+          <h3>Solar System Project Report</h3>
+          <p class="muted">Generate a professional PDF report ready for client / college submission.</p>
+          <div class="row">
+            <label>Client / Project Name <input type="text" id="rp_name" value="Sample Solar Project"></label>
+            <label>Site Location <input type="text" id="rp_loc" value="Hyderabad, India"></label>
+          </div>
+          <div class="row">
+            <label>Daily Load (kWh) <input type="number" id="rp_load" value="10"></label>
+            <label>Sun Hours <input type="number" id="rp_sun" value="5"></label>
+          </div>
+          <div class="row">
+            <label>Panel Wattage (W) <input type="number" id="rp_pw" value="400"></label>
+            <label>Cost/Watt (₹) <input type="number" id="rp_cost" value="55"></label>
+          </div>
+          <label>Prepared By <input type="text" id="rp_by" value="GridMaster Pro"></label>
+          <button class="primary" onclick="generateReport()">📥 Download PDF Report</button>
+        </div>
+        <div class="calc-panel glass" style="margin-top:14px">
+          <h3>📊 Quotation Generator</h3>
+          <div class="row">
+            <label>Client Name <input type="text" id="qt_name" value="Mr. Sharma"></label>
+            <label>System Size (kW) <input type="number" id="qt_kw" value="5"></label>
+          </div>
+          <div class="row">
+            <label>Rate/kW (₹) <input type="number" id="qt_rate" value="55000"></label>
+            <label>GST (%) <input type="number" id="qt_gst" value="13.8"></label>
+          </div>
+          <button class="primary" onclick="generateQuote()">📥 Download Quotation PDF</button>
+        </div>
+      </section>
+
+      <!-- =============== LEARN =============== -->
+      <section class="view hidden" data-view="learn">
+        <h2>📚 <span data-i18n="learn">Learn</span></h2>
+        <div class="accordion" id="learn-list"></div>
+      </section>
+
+      <!-- =============== PRESENT =============== -->
+      <section class="view hidden" data-view="present">
+        <h2>🎞️ <span data-i18n="present">Presentation</span></h2>
+        <div class="slider-wrap glass">
+          <div class="slide" id="slide"></div>
+          <div class="slide-ctrl">
+            <button onclick="prevSlide()">◀ Prev</button>
+            <span id="slideNum">1 / 1</span>
+            <button onclick="nextSlide()">Next ▶</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== QUIZ =============== -->
+      <section class="view hidden" data-view="quiz">
+        <h2>🎯 <span data-i18n="quiz">Quiz</span></h2>
+        <div id="quizBox"></div>
+      </section>
+
+      <!-- =============== ABOUT =============== -->
+      <section class="view hidden" data-view="about">
+        <h2>ℹ️ About GridMaster Pro</h2>
+        <div class="about-card glass">
+          <h3>The All-in-One Electrical & Renewable Energy Toolkit</h3>
+          <p>Designed for <b>engineering students, electricians, solar installers, renewable energy consultants and smart-grid researchers</b>.</p>
+
+          <h4>✨ What's Inside</h4>
+          <ul>
+            <li>20+ electrical calculators (kW↔HP, kVA↔A, voltage drop, cable size, transformer, motor current, capacitor bank…)</li>
+            <li>Solar / Wind / Hybrid system designers</li>
+            <li>📐 AR Rooftop Solar Estimator with camera</li>
+            <li>Live smart grid dashboard with animations</li>
+            <li>EB Bill estimator for 24+ Indian states</li>
+            <li>AI assistant (offline + optional OpenAI/Gemini API)</li>
+            <li>PDF report & quotation generator</li>
+            <li>4 languages: English, हिन्दी, తెలుగు, தமிழ்</li>
+            <li>Learning modules + interactive presentation + quiz</li>
+            <li>Dark mode, offline-ready, installable PWA</li>
+          </ul>
+
+          <h4>📲 Install on Phone</h4>
+          <ol>
+            <li>Open in Chrome / Edge on Android.</li>
+            <li>Tap menu → <b>Install App</b> / <b>Add to Home screen</b>.</li>
+          </ol>
+
+          <h4>🚀 Publish to Google Play Store</h4>
+          <ol>
+            <li>Host this folder on GitHub Pages / Netlify / Vercel.</li>
+            <li>Go to <a href="https://www.pwabuilder.com" target="_blank">pwabuilder.com</a> → paste your URL.</li>
+            <li>Click <b>Package For Stores → Android</b> → download signed <code>.aab</code>.</li>
+            <li>Pay one-time <b>$25</b> for Play Console → upload <code>.aab</code> → submit.</li>
+          </ol>
+
+          <h4>📄 Legal</h4>
+          <p><a href="privacy.html">Privacy Policy</a> • <a href="terms.html">Terms of Service</a></p>
+
+          <p class="muted">© 2026 GridMaster Pro • v3.0.0</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Language Picker Modal -->
+    <div class="modal hidden" id="langModal">
+      <div class="modal-card glass">
+        <div class="modal-head"><h3>🌐 Choose Language</h3><button class="icon-btn" onclick="closeLangModal()">✕</button></div>
+        <div class="lang-list">
+          <button class="lang-btn" data-l="en">🇬🇧 English</button>
+          <button class="lang-btn" data-l="hi">🇮🇳 हिन्दी (Hindi)</button>
+          <button class="lang-btn" data-l="te">🇮🇳 తెలుగు (Telugu)</button>
+          <button class="lang-btn" data-l="ta">🇮🇳 தமிழ் (Tamil)</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav glass">
+      <button class="nav-btn active" data-go="home"><span>🏠</span><small data-i18n="nav_home">Home</small></button>
+      <button class="nav-btn" data-go="calc"><span>🧮</span><small data-i18n="nav_calc">Calc</small></button>
+      <button class="nav-btn" data-go="hybrid"><span>⚡</span><small data-i18n="nav_hybrid">Hybrid</small></button>
+      <button class="nav-btn" data-go="ai"><span>🤖</span><small data-i18n="nav_ai">AI</small></button>
+      <button class="nav-btn" data-go="report"><span>📄</span><small data-i18n="nav_report">Report</small></button>
+    </nav>
+  </div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="brandlogo" viewBox="0 0 120 120">
+      <defs>
+        <linearGradient id="lg2" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#22d3ee"/>
+          <stop offset="100%" stop-color="#16a34a"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="54" fill="none" stroke="url(#lg2)" stroke-width="6"/>
+      <path d="M60 18 L40 64 H58 L52 102 L82 54 H66 L72 18 Z" fill="url(#lg2)"/>
+    </symbol>
+  </svg>
+
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
